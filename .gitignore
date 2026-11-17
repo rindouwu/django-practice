@@ -153,6 +153,7 @@ activemq-data/
 .env
 .envrc
 .venv
+my_django_environment
 env/
 venv/
 ENV/

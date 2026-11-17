@@ -4,11 +4,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/my_django_environment" />
     </content>
-    <orderEntry type="jdk" jdkName="~/Рабочий стол/django-practice/my_django_environment" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="~/django-practice/my_django_environment" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
-  <component name="PackageRequirementsSettings" />
-  <component name="PyDocumentationSettings" />
-  <component name="ReSTService" />
-  <component name="TestRunnerService" />
 </module>
