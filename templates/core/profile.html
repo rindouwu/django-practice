@@ -3,4 +3,35 @@
 {% block content %}
 <h2>Личный кабинет</h2>
 <p>Привет, {{ user.full_name }}</p>
+
+<a href="{% url 'request_create' %}">Создать заявку</a>
+
+<h3>Мои заявки</h3>
+
+<p>
+    Фильтр:
+    <a href="{% url 'profile' %}">все</a> /
+    <a href="?status=new">новые</a> /
+    <a href="?status=in_progress">в работе</a> /
+    <a href="?status=done">выполненные</a>
+</p>
+
+{% for r in requests %}
+<div>
+    <p>
+        <b>{{ r.title }}</b> — {{ r.get_status_display }}
+    </p>
+    <p>{{ r.description }}</p>
+    <p>
+        {{ r.category.name }} · {{ r.created_at|date:"d.m.Y H:i" }}
+    </p>
+    {% if r.status == 'new' %}
+    <a href="{% url 'request_delete' r.id %}"
+       onclick="return confirm('Удалить заявку «{{ r.title }}»?')">удалить</a>
+    {% endif %}
+</div>
+<hr>
+{% empty %}
+<p>Заявок пока нет.</p>
+{% endfor %}
 {% endblock %}

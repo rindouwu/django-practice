@@ -43,5 +43,11 @@ def logout_view(request):
 
 @login_required
 def profile(request):
-    return render(request, 'core/profile.html')
-
+    requests = Request.objects.filter(author=request.user)
+    status = request.GET.get('status')
+    if status in ('new', 'in_progress', 'done'):
+        requests = requests.filter(status=status)
+    return render(request, 'core/profile.html', {
+        'requests': requests,
+        'status': status,
+    })
