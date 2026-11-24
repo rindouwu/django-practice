@@ -62,3 +62,19 @@ def request_create(request):
         messages.success(request, 'Заявка создана')
         return redirect('profile')
     return render(request, 'core/request_form.html', {'form': form})
+
+@login_required
+def request_delete(request, pk):
+    req = Request.objects.filter(pk=pk, author=request.user).first()
+    if not req:
+        messages.error(request, 'Заявка не найдена')
+        return redirect('profile')
+    if req.status != 'new':
+        messages.error(request, 'Нельзя удалить заявку в работе или выполненную')
+        return redirect('profile')
+    if request.method == 'POST':
+        req.photo.delete(save=False)
+        req.delete()
+        messages.success(request, 'Заявка удалена')
+        return redirect('profile')
+    return render(request, 'core/request_delete.html', {'req': req})

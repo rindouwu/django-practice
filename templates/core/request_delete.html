@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Удаление заявки{% endblock %}
+{% block content %}
+<h2>Удалить заявку?</h2>
+<p>«{{ req.title }}» — {{ req.category.name }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Да, удалить</button>
+    <a href="{% url 'profile' %}">Отмена</a>
+</form>
+{% endblock %}
