@@ -72,3 +72,9 @@ class RequestForm(forms.ModelForm):
         if ext not in ('jpg', 'jpeg', 'png', 'bmp'):
             raise ValidationError('Только jpg, jpeg, png, bmp')
         return photo
+
+class AcceptForm(forms.Form):
+    comment = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3}),
+        label='Комментарий'
+    )

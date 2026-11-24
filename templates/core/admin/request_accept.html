@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Принять в работу{% endblock %}
+{% block content %}
+  <h2>Принять в работу</h2>
+  <p>Заявка: <b>{{ req.title }}</b></p>
+  <form method="post">
+    {% csrf_token %}
+    {% for filed in form %}
+      <p>
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.errors %}
+          <span class="err">{{ field.errors.0}}</span>
+        {% endif %}
+      </p>
+    {% endfor %}
+    <button type="submit">Принять</button>
+  </form>
+{% endblock %}

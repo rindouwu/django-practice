@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .decorators import admin_required
-from .forms import RegisterForm, LoginForm, RequestForm
+from .forms import RegisterForm, LoginForm, RequestForm, AcceptForm
 from .models import Request
 
 
@@ -95,3 +95,20 @@ def admin_requests(request):
         'requests': requests,
         'status': status,
     })
+
+@admin_required
+def admin_request_accept(request, pk):
+    req = Request.objects.filter(pk=pk).first()
+    if not req:
+        messages.error(request, 'Заявка не найдена')
+        return redirect('admin_requests')
+    if req.status != 'new':
+        messages.error(request, 'Статус уже изменен')
+    form = AcceptForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        req.comment = form.cleaned_data['comment']
+        req.status = 'in_progress'
+        req.save()
+        messages.success(request, 'Статус изменен на <Принято в работу>')
+        return redirect('admin_requests')
+    return render(request, 'core/admin/request_accept.html', {'form': form, 'req': req})
