@@ -32,6 +32,6 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-media/
+media/*
 media/requests/
 media/requests/*

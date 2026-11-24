@@ -78,3 +78,15 @@ class AcceptForm(forms.Form):
         widget=forms.Textarea(attrs={'rows': 3}),
         label='Комментарий'
     )
+
+class CompleteForm(forms.Form):
+    design = forms.ImageField(label='Изображение дизайна')
+
+    def clean_design(self):
+        img = self.cleaned_data['design']
+        if img.size > 2 * 1024 * 1024:
+            raise ValidationError('Файл больше 2мб')
+        ext = img.name.split('.')[-1].lower()
+        if ext not in ('jpg', 'jpeg', 'png', 'bmp'):
+            raise ValidationError('Только jpg, jpeg, png, bmp')
+        return img

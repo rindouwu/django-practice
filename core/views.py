@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .decorators import admin_required
-from .forms import RegisterForm, LoginForm, RequestForm, AcceptForm
+from .forms import RegisterForm, LoginForm, RequestForm, AcceptForm, CompleteForm
 from .models import Request
 
 
@@ -104,6 +104,7 @@ def admin_request_accept(request, pk):
         return redirect('admin_requests')
     if req.status != 'new':
         messages.error(request, 'Статус уже изменен')
+        return redirect('admin_requests')
     form = AcceptForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         req.comment = form.cleaned_data['comment']
@@ -112,3 +113,22 @@ def admin_request_accept(request, pk):
         messages.success(request, 'Статус изменен на <Принято в работу>')
         return redirect('admin_requests')
     return render(request, 'core/admin/request_accept.html', {'form': form, 'req': req})
+
+@admin_required
+def admin_request_complete(request, pk):
+    req = Request.objects.filter(pk=pk).first()
+    if not req:
+        messages.error(request, 'Заявка не найдена')
+        return redirect('admin_requests')
+    if req.status != 'new':
+        messages.error(request, 'Статус уже изменен')
+        return redirect('admin_requests')
+
+    form = CompleteForm(request.POST or None, request.FILES or None)
+    if(request.method == 'POST' and form.is_valid()):
+        req.design_image = form.cleaned_data['design']
+        req.status = 'done'
+        req.save()
+        messages.success(request, 'Заявка выполнена')
+        return redirect('admin_requests')
+    return render(request, 'core/admin/request_complete.html', {'form': form, 'req': req})
