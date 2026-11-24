@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+
+from .decorators import admin_required
 from .forms import RegisterForm, LoginForm, RequestForm
 from .models import Request
 
@@ -78,3 +80,7 @@ def request_delete(request, pk):
         messages.success(request, 'Заявка удалена')
         return redirect('profile')
     return render(request, 'core/request_delete.html', {'req': req})
+
+@admin_required
+def admin_dashboard(request):
+    return render(request, 'core/admin/dashboard.html')
