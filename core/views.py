@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, RequestForm
 from .models import Request
 
 
@@ -51,3 +51,14 @@ def profile(request):
         'requests': requests,
         'status': status,
     })
+
+@login_required
+def request_create(request):
+    form = RequestForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST' and form.is_valid():
+        req = form.save(commit=False)
+        req.author = request.user
+        req.save()
+        messages.success(request, 'Заявка создана')
+        return redirect('profile')
+    return render(request, 'core/request_form.html', {'form': form})

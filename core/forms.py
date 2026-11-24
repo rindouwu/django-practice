@@ -1,7 +1,7 @@
 import re
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import User
+from .models import User, Category, Request
 
 class RegisterForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, label='Пароль', min_length=6)
@@ -49,3 +49,26 @@ class RegisterForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(label='Логин')
     password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
+
+class RequestForm(forms.ModelForm):
+    class Meta:
+        model = Request
+        fields = ['title', 'description', 'category', 'photo']
+        labels = {
+            'title': 'Название',
+            'description': 'Описание',
+            'category': 'Категория',
+            'photo': 'Фото помещения',
+        }
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+        }
+
+    def clean_photo(self):
+        photo = self.cleaned_data['photo']
+        if photo.size > 2 * 1024 * 1024:
+            raise ValidationError('Файл больше 2 МБ')
+        ext = photo.name.split('.')[-1].lower()
+        if ext not in ('jpg', 'jpeg', 'png', 'bmp'):
+            raise ValidationError('Только jpg, jpeg, png, bmp')
+        return photo
