@@ -84,3 +84,14 @@ def request_delete(request, pk):
 @admin_required
 def admin_dashboard(request):
     return render(request, 'core/admin/dashboard.html')
+
+@admin_required
+def admin_requests(request):
+    requests = Request.objects.all()
+    status = request.GET.get('status')
+    if status in ('new', 'in_progress', 'done'):
+        requests = requests.filter(status=status)
+    return render(request, 'core/admin/requests.html', {
+        'requests': requests,
+        'status': status,
+    })

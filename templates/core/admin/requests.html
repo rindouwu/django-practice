@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}Заявки{% endblock %}
+{% block content %}
+  <h2>Все заявки</h2>
+  <p>
+    Фильтр:
+    <a href="{% url 'admin_requests' %}">все</a> /
+    <a href="?status=new">новые</a> /
+    <a href="?status=in_progress">в работе</a> /
+    <a href="?status=done">выполненные</a>
+  </p>
+  {% for r in requests %}
+    <div>
+      <p>
+        <b>{{ r.title }}</b> - {{ r.get_status_display }}
+      </p>
+      <p>{{ r.description }}</p>
+      {% if r.photo %}
+        <p><img src="{{ r.photo.url }}" width="150"></p>
+      {% endif %}
+      <p>
+        {{ r.category.name }} * {{ r.created_at|date:"d.m.Y H:i" }} * Автор: {{ r.author.username }}
+      </p>
+      {% if r.status == 'new' %}
+        <a href="{% url 'admin_request_accept' r.id %}">принять в работу</a> /
+        <a href="{% url 'admin_request_complete' r.id %}">выполнено</a>
+      {% elif r.comment %}
+        <p>Комментарий: {{ r.comment }}</p>
+      {% endif %}
+      {% if r.design_image %}
+        <p><img src="{{ r.design_image.url }}" width="150"></p>
+      {% endif %}
+    </div>
+  <hr>
+  {% empty %}
+  <p>Заявок нет.</p>
+  {% endfor %}
+{% endblock %}
