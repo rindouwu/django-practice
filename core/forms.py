@@ -16,15 +16,16 @@ class RegisterForm(forms.ModelForm):
             'username': 'Логин',
             'email': 'Email'
         }
+
     def clean_full_name(self):
         name = self.cleaned_data['full_name']
-        if not re.fullmatch(r'[А-Яа-яЁё\-\s]', name):
+        if not re.fullmatch(r'[А-Яа-яЁё\-\s]+', name):
             raise ValidationError('Только киррилица, дефис и пробелы')
         return name
 
     def clean_username(self):
         login = self.cleaned_data['username']
-        if not re.fullmatch(r'[A-Za-z\-]', login):
+        if not re.fullmatch(r'[A-Za-z\-]+', login):
             raise ValidationError('Только латиница, и дефис')
         if User.objects.filter(username=login).exists():
             raise ValidationError('Логин занят')
@@ -45,6 +46,6 @@ class RegisterForm(forms.ModelForm):
             user.save()
         return user
 
-    class LoginForm(forms.Form):
-        username = forms.CharField(label='Логин')
-        password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Логин')
+    password = forms.CharField(widget=forms.PasswordInput, label='Пароль')
