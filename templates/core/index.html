@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
 {% block title %}Главная{% endblock %}
 {% block content %}
-<h2>Design.pro - дизайн интерьера</h2>
-<p>Завяок в работе: {{ in_work }}</p>
+<h2>Design.pro — дизайн интерьеров</h2>
+<p>Заявок в работе: <b>{{ in_work }}</b></p>
 
 <h3>Выполненные работы</h3>
-{% for r in done %}
-    <div>
+<div class="done-list">
+    {% for r in done %}
+    <div class="card">
         {% if r.design_image %}
-            <img src="{{ r.design_image.url }}" width="200">
+        <img src="{{ r.design_image.url }}" width="100%">
         {% endif %}
-        <p>{{ r.created_at|date:"d.m.Y H:i" }} - {{ r.title }} - {{ r.category.name }}</p>
+        <p><b>{{ r.title }}</b></p>
+        <p>{{ r.category.name }}</p>
+        <p>{{ r.created_at|date:"d.m.Y" }}</p>
     </div>
-{% empty %}
-    <p>Пока нету выполненных заявок</p>
-{% endfor %}
+    {% empty %}
+    <p>Пока нет выполненных заявок</p>
+    {% endfor %}
+</div>
 {% endblock %}

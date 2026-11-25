@@ -1,32 +1,38 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %} Design.pro {% endblock %}</title>
+    <title>{% block title %}Design.pro{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <header>
-        <a href="{% url 'index' %}">Design.pro</a>
-        <nav>
-            {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}">Кабинет</a>
-                <a href="{% url 'logout' %}">Выход</a>
-            {% else %}
-                <a href="{% url 'login' %}">Вход</a>
-                <a href="{% url 'register' %}">Регистрация</a>
-            {% endif %}
-        </nav>
-    </header>
-    {% if messages %}
-        {% for m in messages %}
-            <p class="{{ m.tags }}">{{ m }}</p>
-        {% endfor %}
-    {% endif %}
+<header>
+    <a href="{% url 'index' %}" class="logo">Design.pro</a>
+    <nav>
+        {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+        <a href="{% url 'admin_dashboard' %}">Админка</a>
+        {% endif %}
+        <a href="{% url 'profile' %}">Кабинет</a>
+        <a href="{% url 'logout' %}">Выход</a>
+        {% else %}
+        <a href="{% url 'login' %}">Вход</a>
+        <a href="{% url 'register' %}">Регистрация</a>
+        {% endif %}
+    </nav>
+</header>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+{% if messages %}
+<div class="messages">
+    {% for m in messages %}
+    <p class="{{ m.tags }}">{{ m }}</p>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main>
+    {% block content %}{% endblock %}
+</main>
 </body>
 </html>

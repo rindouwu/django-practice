@@ -10,7 +10,7 @@
     <a href="?status=done">выполненные</a>
   </p>
   {% for r in requests %}
-    <div>
+    <div class="card">
       <p>
         <b>{{ r.title }}</b> - {{ r.get_status_display }}
       </p>
@@ -31,7 +31,6 @@
         <p><img src="{{ r.design_image.url }}" width="150"></p>
       {% endif %}
     </div>
-  <hr>
   {% empty %}
   <p>Заявок нет.</p>
   {% endfor %}

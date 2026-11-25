@@ -12,12 +12,11 @@
     {% endif %}
 </form>
 
-<hr>
-
 {% for c in categories %}
 <p>
     {{ c.name }}
     <a href="{% url 'admin_category_delete' c.id %}"
+       class="btn btn-danger"
        onclick="return confirm('Удалить категорию {{ c.name }}? Все её заявки тоже удалятся.')">удалить</a>
 </p>
 {% empty %}
