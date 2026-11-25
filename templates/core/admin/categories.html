@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Категории{% endblock %}
+{% block content %}
+<h2>Категории</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.name }}
+    <button type="submit">Добавить</button>
+    {% if form.name.errors %}
+    <span class="err">{{ form.name.errors.0 }}</span>
+    {% endif %}
+</form>
+
+<hr>
+
+{% for c in categories %}
+<p>
+    {{ c.name }}
+    <a href="{% url 'admin_category_delete' c.id %}"
+       onclick="return confirm('Удалить категорию {{ c.name }}? Все её заявки тоже удалятся.')">удалить</a>
+</p>
+{% empty %}
+<p>Категорий нет.</p>
+{% endfor %}
+{% endblock %}

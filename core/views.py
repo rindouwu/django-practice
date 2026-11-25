@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from .decorators import admin_required
-from .forms import RegisterForm, LoginForm, RequestForm, AcceptForm, CompleteForm
-from .models import Request
+from .forms import RegisterForm, LoginForm, RequestForm, AcceptForm, CompleteForm, CategoryForm
+from .models import Request, Category
 
 
 def index(request):
@@ -132,3 +132,31 @@ def admin_request_complete(request, pk):
         messages.success(request, 'Заявка выполнена')
         return redirect('admin_requests')
     return render(request, 'core/admin/request_complete.html', {'form': form, 'req': req})
+
+@admin_required
+def admin_categories(request):
+    form = CategoryForm(request.POST or None)
+    if request.method == 'POST' and form.is_valid():
+        form.save()
+        messages.success(request, 'Категория добавлена')
+        return redirect('admin_categories')
+    return render(request, 'core/admin/categories.html', {
+        'categories': Category.objects.all(),
+        'form': form,
+    })
+
+@admin_required
+def admin_category_delete(request, pk):
+    cat = Category.objects.filter(pk=pk).first()
+    if not cat:
+        messages.error(request, 'Категория не найдена')
+        return redirect('admin_categories')
+    if request.method == 'POST':
+        for r in cat.request_set.all():
+            r.photo.delete(save=False)
+            if r.design_image:
+                r.design_image.delete(save=False)
+        cat.delete()
+        messages.success(request, 'Категория и её заявки удалены')
+        return redirect('admin_categories')
+    return render(request, 'core/admin/category_delete.html', {'cat': cat})

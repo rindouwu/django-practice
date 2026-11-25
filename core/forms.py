@@ -90,3 +90,9 @@ class CompleteForm(forms.Form):
         if ext not in ('jpg', 'jpeg', 'png', 'bmp'):
             raise ValidationError('Только jpg, jpeg, png, bmp')
         return img
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']
+        labels = {'name': 'Название'}
